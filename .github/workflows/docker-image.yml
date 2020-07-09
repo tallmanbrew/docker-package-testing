@@ -22,6 +22,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
-        repository: tallmanbrew/docker-package-testing
+        repository: tallmanbrew/docker-package-testing/dpt
         tag_with_ref: true
         
