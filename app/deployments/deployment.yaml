@@ -1,0 +1,65 @@
+apiVersion: v1 
+kind: Namespace 
+metadata: 
+  name:  dpt
+--- 
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: fluxdemo 
+  namespace: dpt  
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      role: demo 
+  template: 
+    metadata: 
+      labels: 
+        role: demo 
+    spec: 
+      containers: 
+      - name: nginx 
+        image: nginx:1.16-perl 
+        imagePullPolicy: IfNotPresent 
+        ports: 
+        - name: http 
+          containerPort: 80 
+        volumeMounts: 
+        - name: nginx-proxy-config 
+          mountPath: /etc/nginx/conf.d/default.conf 
+          subPath: nginx.conf 
+      - name: flask 
+        image: docker.pkg.github.com/tallmanbrew/docker-package-testing/dpt:latest 
+        imagePullPolicy: IfNotPresent 
+        ports: 
+        - name: http 
+          containerPort: 5000 
+        env: 
+        - name: APP_NAME 
+          value: dptdemo.K8s.GitOps 
+        - name: APP_VERSION 
+          value: v1.0.0 
+      volumes: 
+      - name: nginx-proxy-config 
+        configMap: 
+          name: nginx-conf 
+---
+apiVersion: v1
+kind: ConfigMap 
+metadata: 
+  name: nginx-conf
+  namespace: dpt
+data:
+  nginx.conf: |-
+    #CODE1.0:
+    #add the nginx.conf configuration - this will be referenced within the deployment.yaml
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            proxy_pass http://localhost:5000/;
+            proxy_set_header Host "localhost";
+        }
+    }
