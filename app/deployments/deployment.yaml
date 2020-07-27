@@ -32,3 +32,5 @@ spec:
         - name: APP_VERSION 
           value: v1.0.0
       dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: github
