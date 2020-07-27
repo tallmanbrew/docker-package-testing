@@ -29,6 +29,4 @@ spec:
         - name: APP_NAME 
           value: dptdemo.K8s.GitOps 
         - name: APP_VERSION 
-          value: v1.0.0 
-      imagePullSecrets:
-        - name: deploykey 
+          value: v1.0.0
