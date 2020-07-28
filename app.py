@@ -3,7 +3,7 @@ from redis import Redis, RedisError
 import os
 import socket
 
-redis = Redis(host="redis-master.redis.svc.cluster.local", port=6379, db=0, socket_connect_timeout=2, socket_timeout=2)
+redis = Redis(host="redis-master.redis.svc.cluster.local", port=6379, password=REDIS_PASSWORD, db=0, socket_connect_timeout=2, socket_timeout=2)
 
 app = Flask(__name__)
 
