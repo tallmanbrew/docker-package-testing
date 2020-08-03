@@ -1,7 +1,10 @@
 from flask import Flask
+# from rediscluster import RedisCluster
 from redis import Redis, RedisError
 import os
 import socket
+
+# startup_nodes = [{"host": "redis-master.redis.svc.cluster.local", "port":"6379"
 
 redis = Redis(host="redis-master.redis.svc.cluster.local", port=6379, password=REDIS_PASSWORD, db=0, socket_connect_timeout=2, socket_timeout=2)
 
