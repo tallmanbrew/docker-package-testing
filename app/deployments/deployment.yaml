@@ -57,7 +57,7 @@ metadata:
   namespace: dpt
 spec:
   rules:
-  - host: flask-demo.tallman.home
+  - host: flask-demo.apps.tallman.family
     http:
       paths:
       - backend:
