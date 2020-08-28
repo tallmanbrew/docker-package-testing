@@ -22,7 +22,7 @@ def hello():
             "<b>Visits:</b> {visits}"
             
   return html.format(
-          name=os.getenv("NAME", "world 2"),
+          name=os.getenv("NAME", "world"),
           hostname=socket.gethostname(),
           visits=visits
         )
