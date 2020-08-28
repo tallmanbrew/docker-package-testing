@@ -22,7 +22,7 @@ spec:
       containers: 
       - name: flask 
         image: docker.pkg.github.com/tallmanbrew/docker-package-testing/dpt:latest 
-        imagePullPolicy: IfNotPresent 
+        imagePullPolicy: Always 
         ports:
         - containerPort: 80
         env: 
