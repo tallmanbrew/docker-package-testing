@@ -25,6 +25,9 @@ spec:
         imagePullPolicy: Always 
         ports:
         - containerPort: 80
+        volumeMounts:
+          - name: smb01
+            mountPath: "/mnt/fileshare"
         env: 
         - name: APP_NAME 
           value: dptdemo.K8s.GitOps 
@@ -32,6 +35,10 @@ spec:
           value: v1.0.0
       imagePullSecrets:
       - name: github
+      volumes:
+        - name: smb01
+          persistentVolumeClaim:
+              claimName: pvc-smb
 ---
 apiVersion: v1
 kind: Service
@@ -63,3 +70,33 @@ spec:
       - backend:
           serviceName: flask
           servicePort: 80
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: smb
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//tower/rancherapplications"
+  csi.storage.k8s.io/node-stage-secret-name: "smbcreds"
+  csi.storage.k8s.io/node-stage-secret-namespace: "dpt"
+  createSubDir: "false"  # optional: create a sub dir for new volume
+reclaimPolicy: Retain  # only retain is supported
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1001
+  - gid=1001
