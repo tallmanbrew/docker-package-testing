@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 # from rediscluster import RedisCluster
 from redis import Redis, RedisError
 import os
@@ -26,6 +26,27 @@ def hello():
           hostname=socket.gethostname(),
           visits=visits
         )
+
+@app.route("/files")
+def dirtree():
+  path = os.path.expanduser(u'/mnt/fileshare')
+  return render_template('dirtree.html', tree=make_tree(path))
+
+def make_tree(path):
+  tree = dict(name=path, children=[])
+  try: lst = os.listdir(path)
+  except OSError:
+    pass
+  else:
+    for name in lst:
+      fn = os.path.join(path, name)
+      if os.path.isdir(fn):
+        tree['children'].append(make_tree(fn))
+      else:
+        tree['children'].append(dict(name=fn))
+  return tree
+
+
 if __name__ == "__main__":
   app.run(host="0.0.0.0", port=80)
   
